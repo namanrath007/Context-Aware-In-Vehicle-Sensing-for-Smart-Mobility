@@ -33,7 +33,18 @@ ANC systems typically involve:
 An adaptive filter processes the reference signal to generate an estimate of the noise. This estimate is subtracted from the primary input to produce an error signal, which is the desired signal with reduced noise. The system continuously updates the filter coefficients to minimize the mean squared error.
 
 ---
+### Research Paper Study and Theoretical Insights
+Dedicated time to studying research papers on adaptive noise cancellation, focusing on LMS algorithm parameter optimization. Gained several key theoretical insights:
+- Step Size (μ): Crucial for balancing convergence speed and algorithm stability.
+- Filter Order: Higher order tracks complex noise but increases computational load.
+- Convergence Rate: Dependent on step size and input signal characteristics.
+- Noise Reduction vs. Signal Distortion: A trade-off must be maintained; careful tuning is vital.
+- Real-time Processing Efficiency: Algorithm optimization for speed is essential.
+- Adaptive Filter Initialization: Starting values affect convergence behaviors.
+- Use of Reference Signals: Highly correlated reference signals improve suppression.
+- Performance Metrics: Incorporating MSE and SNR for quantitative tracking.
 
+---
 ### 🔹 Mathematical Representation
 
 Let:
@@ -56,6 +67,22 @@ w(n+1) = w(n) + μ * e(n) * x(n)
 Where:
 
 - `μ` is the step-size parameter controlling convergence speed and stability.
+
+---
+### 🔹 LMS Adaptive Filtering Working
+Idea: Use these IMU signals (after resampling them to the audio sampling rate) as reference inputs to the LMS filter to estimate the noise component due to engine, and subtract it from the audio.
+![image](https://github.com/user-attachments/assets/6a145725-abdc-4277-b02e-abb1c3880eb1)
+- After loading the data, column parameters such as time, accelerometer at x, y and z axis and  Gyroscope at x, y, z axis are stored.
+![image](https://github.com/user-attachments/assets/5714bf8c-c0dc-414c-953a-510d931a3009)
+- We resample the IMU(accelerometer, Gyroscope) data because the audio might be at 16000 Hz but IMU might be at 1000Hz or may have time delays.
+![image](https://github.com/user-attachments/assets/9c11c1c3-c781-4646-940a-30e8093566c0)
+- The resampled IMU data is used as reference input in [x(n)]. It is later used in updating the weights [W]. The weights are used to make changes in actual output [Y]. This would make changes in error output signal [e(n)].
+![image](https://github.com/user-attachments/assets/94b7e6da-1b53-4179-9989-6f9949e83f5a)
+- As there are multiple column parameters e can use multichannel inputs into single unit. Then resampling it to take it in reference input.
+
+
+#### Summary Workflow
+![image](https://github.com/user-attachments/assets/215c1daa-6c77-42b1-8bd7-bb42a9eae010)
 
 ---
 
@@ -87,7 +114,8 @@ By correlating IMU data with microphone recordings, the adaptive filter effectiv
 ## 🛠️ Technologies Used
 
 - **MATLAB** for implementing LMS adaptive filtering and audio signal processing.
-- **LSM6DSV16X / LSM6DSV16BX IMU sensors** for acquiring accelerometer and gyroscope data.
+- **Jupyter Notebook** for implementing Audio signal processing and Visualizations.
+- **SensorTile.BOX / LSM6DSV16BX IMU sensors** for acquiring accelerometer and gyroscope data.
 - **Audio files (.wav)** for primary microphone input.
 - **CSV files** for IMU data logs.
 

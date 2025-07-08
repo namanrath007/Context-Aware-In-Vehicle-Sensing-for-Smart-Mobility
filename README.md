@@ -69,20 +69,69 @@ Where:
 - `μ` is the step-size parameter controlling convergence speed and stability.
 
 ---
-### 🔹 LMS Adaptive Filtering Working
-Idea: Use these IMU signals (after resampling them to the audio sampling rate) as reference inputs to the LMS filter to estimate the noise component due to engine, and subtract it from the audio.
-![image](https://github.com/user-attachments/assets/6a145725-abdc-4277-b02e-abb1c3880eb1)
-- After loading the data, column parameters such as time, accelerometer at x, y and z axis and  Gyroscope at x, y, z axis are stored.
-![image](https://github.com/user-attachments/assets/5714bf8c-c0dc-414c-953a-510d931a3009)
-- We resample the IMU(accelerometer, Gyroscope) data because the audio might be at 16000 Hz but IMU might be at 1000Hz or may have time delays.
-![image](https://github.com/user-attachments/assets/9c11c1c3-c781-4646-940a-30e8093566c0)
-- The resampled IMU data is used as reference input in [x(n)]. It is later used in updating the weights [W]. The weights are used to make changes in actual output [Y]. This would make changes in error output signal [e(n)].
-![image](https://github.com/user-attachments/assets/94b7e6da-1b53-4179-9989-6f9949e83f5a)
-- As there are multiple column parameters e can use multichannel inputs into single unit. Then resampling it to take it in reference input.
+## 🔹 LMS Adaptive Filtering Working
 
+### 📌 Idea  
+Use these **IMU signals** (after resampling them to the audio sampling rate) as reference inputs to the **LMS adaptive filter**. The filter estimates the noise component due to the engine and subtracts it from the audio.
 
-#### Summary Workflow
-![image](https://github.com/user-attachments/assets/215c1daa-6c77-42b1-8bd7-bb42a9eae010)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6a145725-abdc-4277-b02e-abb1c3880eb1" alt="LMS Filter Block Diagram">
+</p>
+
+---
+
+### 📥 Data Loading  
+
+After loading the data:
+- Column parameters such as **Time**, **Accelerometer (X, Y, Z)**, and **Gyroscope (X, Y, Z)** values are stored.
+- These signals are prepared for the resampling process.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5714bf8c-c0dc-414c-953a-510d931a3009" alt="IMU Data Columns">
+</p>
+
+---
+
+### 🔄 Resampling IMU Data  
+
+- The IMU data is typically collected at a lower sampling rate (e.g., **1000 Hz**), whereas the audio might be at **16000 Hz**.
+- To synchronize both, **IMU data is resampled** to match the audio sampling rate.
+- This ensures both data streams are time-aligned and suitable for adaptive filtering.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9c11c1c3-c781-4646-940a-30e8093566c0" alt="Resampling Process">
+</p>
+
+---
+
+### 📝 LMS Filtering Process  
+
+- The **resampled IMU data** is used as the **reference input `x(n)`**.
+- It updates the **filter weights `W`** based on the **error signal `e(n)`**.
+- The adaptive weights adjust the filter output `y(n)` (estimated noise).
+- The difference between the **primary signal `d(n)`** and the noise estimate forms the **error signal `e(n)`**, which improves iteratively.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/94b7e6da-1b53-4179-9989-6f9949e83f5a" alt="LMS Filtering Process">
+</p>
+
+---
+
+### 📊 Multi-Channel IMU Inputs  
+
+- Since multiple IMU columns (Accelerometer X, Y, Z and Gyroscope X, Y, Z) are available:
+  - These can be treated as **multichannel inputs**.
+  - Each signal is resampled and passed into the adaptive filter setup.
+  - Combining multiple IMU axes may improve noise estimation accuracy.
+
+---
+
+## 📑 Summary Workflow  
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/215c1daa-6c77-42b1-8bd7-bb42a9eae010" alt="ANC System Workflow">
+</p>
+
 
 ---
 

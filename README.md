@@ -183,6 +183,11 @@ The ANC system successfully reduced engine-induced noise components in the audio
 
 ---
 
+## 📑 License
+
+Distributed under the MIT License. See License.md for more information.
+---
+
 ## 📬 Contact
 
 **Naman Rath**  
